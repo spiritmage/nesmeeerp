@@ -1,97 +1,32 @@
+version: '3.1'
 services:
   web:
-    image: 'odoo:latest'
+    image: odoo:latest
     depends_on:
       - db
     restart: always
     ports:
-      - '8070:8070'
-      - '8073:8073'
+      - "8069:8069"
+      - "8072:8072"
     volumes:
-      - 'yg04wk0w4okg0s44wggosgok_odoo-web-data:/var/lib/odoo'
-      - '/data/coolify/services/yg04wk0w4okg0s44wggosgok/config:/etc/odoo'
-      - '/data/coolify/services/yg04wk0w4okg0s44wggosgok/addons:/mnt/extra-addons'
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
-      POSTGRES_USER: odoo
-      POSTGRES_HOST: db
-      COOLIFY_RESOURCE_UUID: yg04wk0w4okg0s44wggosgok
-      COOLIFY_CONTAINER_NAME: web-yg04wk0w4okg0s44wggosgok
-      COOLIFY_FQDN: erp.nesmee.org.in/
-      COOLIFY_URL: 'https://erp.nesmee.org.in/'
-    container_name: web-yg04wk0w4okg0s44wggosgok
-    labels:
-      - coolify.managed=true
-      - coolify.version=4.0.0-beta.428
-      - coolify.serviceId=4
-      - coolify.type=service
-      - coolify.name=web-yg04wk0w4okg0s44wggosgok
-      - coolify.resourceName=service-nw00sso4kc8gos8gcwgsww4c
-      - coolify.projectName=off-dock
-      - coolify.serviceName=oodo
-      - coolify.environmentName=production
-      - coolify.pullRequestId=0
-      - coolify.service.subId=6
-      - coolify.service.subType=application
-      - coolify.service.subName=oodo
-      - traefik.enable=true
-      - traefik.http.middlewares.gzip.compress=true
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-      - traefik.http.routers.http-0-yg04wk0w4okg0s44wggosgok-web.entryPoints=http
-      - traefik.http.routers.http-0-yg04wk0w4okg0s44wggosgok-web.middlewares=redirect-to-https
-      - 'traefik.http.routers.http-0-yg04wk0w4okg0s44wggosgok-web.rule=Host(`erp.nesmee.org.in`) && PathPrefix(`/`)'
-      - traefik.http.routers.https-0-yg04wk0w4okg0s44wggosgok-web.entryPoints=https
-      - traefik.http.routers.https-0-yg04wk0w4okg0s44wggosgok-web.middlewares=gzip
-      - 'traefik.http.routers.https-0-yg04wk0w4okg0s44wggosgok-web.rule=Host(`erp.nesmee.org.in`) && PathPrefix(`/`)'
-      - traefik.http.routers.https-0-yg04wk0w4okg0s44wggosgok-web.tls.certresolver=letsencrypt
-      - traefik.http.routers.https-0-yg04wk0w4okg0s44wggosgok-web.tls=true
-      - 'caddy_0.encode=zstd gzip'
-      - 'caddy_0.handle_path.0_reverse_proxy={{upstreams}}'
-      - 'caddy_0.handle_path=/*'
-      - caddy_0.header=-Server
-      - 'caddy_0.try_files={path} /index.html /index.php'
-      - 'caddy_0=https://erp.nesmee.org.in'
-      - caddy_ingress_network=yg04wk0w4okg0s44wggosgok
-    networks:
-      yg04wk0w4okg0s44wggosgok: null
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=odoo
+      - POSTGRES_HOST=db  # This line is correct
   db:
-    image: 'postgres:latest'
+    image: postgres:latest
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
-      POSTGRES_USER: odoo
-      ODOO_LIST_DB: 'False'
-      PGDATA: /var/lib/postgresql/data/pgdata
-      COOLIFY_RESOURCE_UUID: yg04wk0w4okg0s44wggosgok
-      COOLIFY_CONTAINER_NAME: db-yg04wk0w4okg0s44wggosgok
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
     restart: always
     volumes:
-      - 'yg04wk0w4okg0s44wggosgok_odoo-db-data:/var/lib/postgresql/data/pgdata'
-    container_name: db-yg04wk0w4okg0s44wggosgok
-    labels:
-      - coolify.managed=true
-      - coolify.version=4.0.0-beta.428
-      - coolify.serviceId=4
-      - coolify.type=service
-      - coolify.name=db-yg04wk0w4okg0s44wggosgok
-      - coolify.resourceName=service-nw00sso4kc8gos8gcwgsww4c
-      - coolify.projectName=off-dock
-      - coolify.serviceName=
-      - coolify.environmentName=production
-      - coolify.pullRequestId=0
-      - coolify.service.subId=6
-      - coolify.service.subType=database
-    networks:
-      yg04wk0w4okg0s44wggosgok: null
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
 volumes:
-  yg04wk0w4okg0s44wggosgok_odoo-web-data:
-    name: yg04wk0w4okg0s44wggosgok_odoo-web-data
-  yg04wk0w4okg0s44wggosgok_odoo-db-data:
-    name: yg04wk0w4okg0s44wggosgok_odoo-db-data
-networks:
-  yg04wk0w4okg0s44wggosgok:
-    name: yg04wk0w4okg0s44wggosgok
-    external: true
-configs: {  }
-secrets: {  }
+  odoo-web-data:
+  odoo-db-data:
