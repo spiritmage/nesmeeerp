@@ -6,7 +6,7 @@ services:
     restart: always
     ports:
       - '8070:8070'
-      - '8072:8072'
+      - '8073:8073'
     volumes:
       - 'yg04wk0w4okg0s44wggosgok_odoo-web-data:/var/lib/odoo'
       - '/data/coolify/services/yg04wk0w4okg0s44wggosgok/config:/etc/odoo'
