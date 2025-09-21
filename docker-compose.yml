@@ -7,7 +7,7 @@ services:
     restart: always
     ports:
       - "8070:8069"
-      - "8072:8072"
+      - "8074:8074"
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./config:/etc/odoo
